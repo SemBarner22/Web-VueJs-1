@@ -2,8 +2,7 @@
     <!--suppress HtmlUnknownTag -->
     <body id="app">
     <Header :userId="userId" :users="users"/>
-    <Middle :users="users" :posts="posts"/>
-    <Sidebar :users="users" :posts="posts"/>
+    <Middle :users="users" :posts="posts" :comments="comments"/>
     <Footer/>
     </body>
 </template>
@@ -12,7 +11,6 @@
     import Header from './components/Header'
     import Middle from './components/Middle'
     import Footer from './components/Footer'
-    import Sidebar from "./components/Sidebar";
 
     export default {
         name: 'app',
@@ -20,7 +18,6 @@
             return this.$root.$data;
         },
         components: {
-            Sidebar,
             Header,
             Middle,
             Footer
@@ -39,8 +36,7 @@
             });
             this.$root.$on("onRegister", (login, name) => {
                 let users = Object.values(this.users).filter(u => u.login === login);
-                // Strange amount, not working
-                if (users.length === 1) {                                   // regex doesn't work
+                if (users.length === 0) {
                     if (!login || login.length < 3 || login.length > 16 || !(/^[a-z]+$/.test(login))) {
                         this.$root.$emit("onRegisterValidationError", "Login is invalid");
                     } else if (!name || name.length > 32) {
@@ -53,8 +49,8 @@
                             name,
                             admin: false
                         })
+                        this.$root.$emit("onRegisterSuccess");
                     }
-                    this.$root.$emit("onRegisterSuccess");
                 } else {
                     this.$root.$emit("onRegisterValidationError", "Such login exists");
                 }
