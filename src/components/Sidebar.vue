@@ -5,6 +5,7 @@
 </template>
 
 <script>
+
     import SidebarPost from './SidebarPost';
 
     export default {
